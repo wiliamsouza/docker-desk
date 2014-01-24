@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/fsouza/go-dockerclient"
-	"github.com/niemeyer/qml"
 	"os"
+
+	dockerclient "github.com/fsouza/go-dockerclient"
+	"github.com/niemeyer/qml"
 )
 
 func main() {
@@ -28,28 +29,35 @@ func run() error {
 	window.Show()
 
 	endpoint := "unix:///var/run/docker.sock"
-	client, err := docker.NewClient(endpoint)
+	client, err := dockerclient.NewClient(endpoint)
 	imgs, _ := client.ListImages(true)
-	fmt.Println(imgs)
-	images.Add(imgs[0])
-	images.Add(imgs[1])
+	for _, img := range imgs {
+		fmt.Println("ID: ", img.ID)
+		fmt.Println("RepoTags: ", img.RepoTags)
+		fmt.Println("Created: ", img.Created)
+		fmt.Println("Size: ", img.Size)
+		fmt.Println("VirtualSize: ", img.VirtualSize)
+		fmt.Println("ParentId: ", img.ParentId)
+		fmt.Println("Repository: ", img.Repository)
+		images.Add(img)
+	}
 
 	window.Wait()
 	return nil
 }
 
 type Images struct {
-	list []docker.APIImages
+	list []dockerclient.APIImages
 	Len  int
 }
 
-func (images *Images) Add(i docker.APIImages) {
+func (images *Images) Add(i dockerclient.APIImages) {
 	images.list = append(images.list, i)
 	images.Len = len(images.list)
 	qml.Changed(images, &images.Len)
 }
 
 func (images *Images) Image(index int) string {
-	//img := images.list[index]
-	return "ubuntu" //img.Repository
+	img := images.list[index]
+	return img.ID
 }
