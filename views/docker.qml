@@ -5,9 +5,9 @@ Item {
 
     ListView {
         width: 120;
-        model: images.len
+        model: imageModel
         delegate: Text {
-            text: images.image(index)
+            text: imageModel.data(index).ID
         }
         anchors.top: parent.top
         anchors.bottom: parent.bottom

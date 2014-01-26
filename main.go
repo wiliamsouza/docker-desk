@@ -6,6 +6,8 @@ import (
 
 	dockerclient "github.com/fsouza/go-dockerclient"
 	"github.com/niemeyer/qml"
+
+	"github.com/wiliamsouza/docker-desk/models"
 )
 
 func main() {
@@ -19,9 +21,9 @@ func run() error {
 	qml.Init(nil)
 	engine := qml.NewEngine()
 
-	images := &Images{}
-	engine.Context().SetVar("images", images)
-	component, err := engine.LoadFile("docker.qml")
+	imageModel := &models.ImageModel{}
+	engine.Context().SetVar("imageModel", imageModel)
+	component, err := engine.LoadFile("views/docker.qml")
 	if err != nil {
 		return err
 	}
@@ -39,25 +41,9 @@ func run() error {
 		fmt.Println("VirtualSize: ", img.VirtualSize)
 		fmt.Println("ParentId: ", img.ParentId)
 		fmt.Println("Repository: ", img.Repository)
-		images.Add(img)
+		imageModel.Add(img)
 	}
 
 	window.Wait()
 	return nil
-}
-
-type Images struct {
-	list []dockerclient.APIImages
-	Len  int
-}
-
-func (images *Images) Add(i dockerclient.APIImages) {
-	images.list = append(images.list, i)
-	images.Len = len(images.list)
-	qml.Changed(images, &images.Len)
-}
-
-func (images *Images) Image(index int) string {
-	img := images.list[index]
-	return img.ID
 }
