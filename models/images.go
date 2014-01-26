@@ -11,7 +11,7 @@ type ImageModel struct {
 	images []dockerclient.APIImages
 }
 
-func (model *ImageModel) RowCount() int {
+func (model *ImageModel) Len() int {
 	return len(model.images)
 }
 
