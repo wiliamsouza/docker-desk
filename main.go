@@ -20,16 +20,7 @@ func main() {
 func run() error {
 	qml.Init(nil)
 	engine := qml.NewEngine()
-
 	imageModel := &models.ImageModel{}
-	engine.Context().SetVar("imageModel", imageModel)
-	component, err := engine.LoadFile("views/docker.qml")
-	if err != nil {
-		return err
-	}
-	window := component.CreateWindow(nil)
-	window.Show()
-
 	endpoint := "unix:///var/run/docker.sock"
 	client, err := dockerclient.NewClient(endpoint)
 	imgs, _ := client.ListImages(true)
@@ -43,7 +34,13 @@ func run() error {
 		fmt.Println("Repository: ", img.Repository)
 		imageModel.Add(img)
 	}
-
+	engine.Context().SetVar("imageModel", imageModel)
+	component, err := engine.LoadFile("views/docker.qml")
+	if err != nil {
+		return err
+	}
+	window := component.CreateWindow(nil)
+	window.Show()
 	window.Wait()
 	return nil
 }

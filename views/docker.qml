@@ -5,7 +5,7 @@ Item {
 
     ListView {
         width: 120;
-        model: imageModel.images
+        model: imageModel.len
         delegate: Text {
             text: imageModel.data(index).ID
         }
