@@ -19,6 +19,14 @@ Download
 go get github.com/wiliamsouza/docker-desk
 ```
 
+Build
+-----
+
+```
+cd $GOPATH/src/github.com/wiliamsouza/docker-desk
+go build
+```
+
 Run
 ---
 
