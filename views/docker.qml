@@ -7,7 +7,7 @@ Item {
         width: 120;
         model: imageModel.len
         delegate: Text {
-            text: imageModel.data(index).ID
+            text: imageModel.data(index).iD
         }
         anchors.top: parent.top
         anchors.bottom: parent.bottom
